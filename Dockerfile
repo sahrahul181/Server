@@ -13,11 +13,5 @@ RUN pip install -r requirements.txt
 # Copy the Flask application code into the container
 COPY . .
 
-# Set the environment variable for Flask
-ENV FLASK_APP=app.py
-
-# Expose the port that the Flask app will run on
-EXPOSE 8000
-
 # Start the Flask application
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["python", "main.py"]
