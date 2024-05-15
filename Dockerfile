@@ -1,17 +1,28 @@
 # Use the official Python image as the base image
-FROM python:3.9-slim
+FROM python:3-alpine AS builder
 
 # Set the working directory to /app
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+RUN python3 -m venv venv
+ENV VIRTUAL_ENV=/app/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Install the Python dependencies
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy the Flask application code into the container
-COPY . .
+# Stage 2
+FROM python:3-alpine AS runner
 
-# Start the Flask application
-CMD ["python", "main.py"]
+WORKDIR /app
+
+COPY --from=builder /app/venv venv
+COPY app.py app.py
+
+ENV VIRTUAL_ENV=/app/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV FLASK_APP=app/app.py
+
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind" , ":8080", "--workers", "2", "app:app"]
