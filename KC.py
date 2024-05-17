@@ -38,3 +38,9 @@ stages = [25, 25, 30, 20, 100]
 
 # KC = calculate_kc(100, stages, KCi)
 # print(KC)
+
+
+
+
+# TODO
+# get kc value from database
